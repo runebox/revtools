@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/asm" />
+            <option value="$PROJECT_DIR$/cli" />
+            <option value="$PROJECT_DIR$/client" />
+            <option value="$PROJECT_DIR$/deobfuscator" />
+            <option value="$PROJECT_DIR$/deobfuscator/annotations" />
+            <option value="$PROJECT_DIR$/deobfuscator/ast" />
+            <option value="$PROJECT_DIR$/deobfuscator/bytecode" />
+            <option value="$PROJECT_DIR$/deobfuscator/decompiler" />
+            <option value="$PROJECT_DIR$/deobfuscator/processor" />
+            <option value="$PROJECT_DIR$/downloader" />
+            <option value="$PROJECT_DIR$/logger" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
