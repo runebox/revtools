@@ -8,6 +8,7 @@ import org.objectweb.asm.tree.ClassNode
 
 var ClassNode.group: ClassGroup by field()
 var ClassNode.isRuntime: Boolean by field { false }
+var ClassNode.isIgnored: Boolean by field { false }
 var ClassNode.jarIndex: Int by field { -1 }
 
 var ClassNode.superClass: ClassNode? by nullField()

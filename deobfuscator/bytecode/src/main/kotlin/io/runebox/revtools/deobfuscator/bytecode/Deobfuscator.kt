@@ -1,6 +1,8 @@
 package io.runebox.revtools.deobfuscator.bytecode
 
 import io.runebox.revtools.asm.ClassGroup
+import io.runebox.revtools.asm.node.isIgnored
+import io.runebox.revtools.deobfuscator.bytecode.transformer.DeadCodeTransformer
 import io.runebox.revtools.deobfuscator.bytecode.transformer.RuntimeExceptionTransformer
 import me.tongfei.progressbar.DelegatingProgressBarConsumer
 import me.tongfei.progressbar.ProgressBarBuilder
@@ -24,6 +26,7 @@ class Deobfuscator(
          * Load all the bytecode transformers.
          */
         register<RuntimeExceptionTransformer>()
+        register<DeadCodeTransformer>()
 
         Logger.info("Registered ${transformers.size} bytecode transformers.")
 
@@ -31,9 +34,16 @@ class Deobfuscator(
          * Load all the classes from the input jar into group
          */
         Logger.info("Loading classes from input jar: ${inputJar.path}.")
+
         group.readJar(inputJar)
         group.build()
-        Logger.info("Loaded ${group.classes.size} classes.")
+
+        // Ignore all the bouncy castle library classes but dont exclude them from the class group.
+        for(cls in group.classes.filter { it.name.startsWith("org/") }) {
+            cls.isIgnored = true
+        }
+
+        Logger.info("Loaded ${group.classes.size} classes. (${group.ignoredClasses.size} ignored)")
     }
 
     fun run() {
@@ -42,11 +52,10 @@ class Deobfuscator(
         Logger.info("Starting bytecode deobfuscator transformers...")
 
         ProgressBarBuilder()
-            .setMaxRenderedLength(Int.MAX_VALUE)
+            .setMaxRenderedLength(200)
             .setStyle(ProgressBarStyle.COLORFUL_UNICODE_BLOCK)
             .setInitialMax(transformers.size.toLong())
-            .setUnit(" Transformers", 1)
-            .setConsumer(DelegatingProgressBarConsumer(System.out::println))
+            .setConsumer(DelegatingProgressBarConsumer(Logger::info))
             .build().use { progressBar ->
                 val start = System.currentTimeMillis()
 
@@ -60,14 +69,14 @@ class Deobfuscator(
                 }
 
                 val delta = System.currentTimeMillis() - start
-                Logger.info("Completed all bytecode transformers in (${delta/1000L} seconds.")
+                Logger.info("Completed all bytecode transformers in ${delta/1000L} seconds.")
 
                 // Close progress if not already done.
             }
 
         Logger.info("Writing deobfuscated classes to output jar: ${outputJar.path}.")
-        group.writeJar(outputJar)
-        Logger.info("Successfully wrote ${group.classes.size} classes.")
+
+        group.writeJar(outputJar, writeIgnored = true, writeResources = false)
 
         Logger.info("Bytecode deobfuscator has successfully completed.")
     }

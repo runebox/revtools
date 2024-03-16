@@ -5,6 +5,7 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.file
+import org.tinylog.kotlin.Logger
 
 class DeobfuscateBytecodeCommand : CliktCommand(name = "bytecode") {
 
@@ -18,5 +19,10 @@ class DeobfuscateBytecodeCommand : CliktCommand(name = "bytecode") {
             inputJar,
             outputJar
         ).run()
+
+        if(testClient) {
+            Logger.info("Starting test client using jar: ${outputJar.path}.")
+            TestClient(outputJar).start()
+        }
     }
 }

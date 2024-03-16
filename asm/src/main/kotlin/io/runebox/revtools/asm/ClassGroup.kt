@@ -17,9 +17,10 @@ class ClassGroup {
     private val resources: SortedMap<String, ByteArray> = TreeMap()
     private var hasBuilt = false
 
-    val classes: Set<ClassNode> get() = classMap.values.filterIsInstanceTo(mutableSetOf())
+    val classes: Set<ClassNode> get() = classMap.values.filter { !it.isIgnored }.filterIsInstanceTo(mutableSetOf())
+    val ignoredClasses: Set<ClassNode> get() = classMap.values.filter { it.isIgnored }.filterIsInstanceTo(mutableSetOf())
     val runtimeClasses: Set<ClassNode> get() = runtimeClassMap.values.filterIsInstanceTo(mutableSetOf())
-    val allClasses get() = classes.plus(runtimeClasses)
+    val allClasses get() = classes.plus(ignoredClasses)
 
     fun addResource(name: String, bytes: ByteArray) {
         resources[name] = bytes
@@ -75,14 +76,29 @@ class ClassGroup {
         }
     }
 
-    fun writeJar(file: File) {
+    fun writeJar(file: File, writeIgnored: Boolean = false, writeResources: Boolean = false) {
         if(file.exists()) file.delete()
         if(file.parentFile?.exists() != true) file.parentFile?.mkdirs()
+
         JarOutputStream(file.outputStream()).use { jos ->
             for(cls in classes) {
                 jos.putNextEntry(JarEntry("${cls.name}.class"))
                 jos.write(cls.toByteArray(ClassWriter.COMPUTE_MAXS))
                 jos.closeEntry()
+            }
+            if(writeIgnored) {
+                for(cls in ignoredClasses) {
+                    jos.putNextEntry(JarEntry("${cls.name}.class"))
+                    jos.write(cls.toByteArray(ClassWriter.COMPUTE_MAXS))
+                    jos.closeEntry()
+                }
+            }
+            if(writeResources) {
+                for((name, bytes) in resources) {
+                    jos.putNextEntry(JarEntry(name))
+                    jos.write(bytes)
+                    jos.closeEntry()
+                }
             }
         }
     }

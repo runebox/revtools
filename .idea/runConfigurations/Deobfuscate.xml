@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Deobfuscate" type="JetRunConfigurationType" folderName="Deobfuscator">
+    <option name="MAIN_CLASS_NAME" value="io.runebox.revtools.cli.CommandKt" />
+    <module name="revtools.cli.main" />
+    <option name="PROGRAM_PARAMETERS" value="deobfuscate bytecode client/build/gamepack.jar client/build/gamepack.deob.jar --test-client" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

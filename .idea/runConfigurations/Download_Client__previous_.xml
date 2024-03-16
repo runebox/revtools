@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Deobfuscate Bytecode" type="JetRunConfigurationType" folderName="Deobfuscator">
+  <configuration default="false" name="Download Client [previous]" type="JetRunConfigurationType" folderName="Downloader">
     <option name="MAIN_CLASS_NAME" value="io.runebox.revtools.cli.CommandKt" />
     <module name="revtools.cli.main" />
-    <option name="PROGRAM_PARAMETERS" value="deobfuscate bytecode client/build/gamepack.jar client/build/gamepack.deob.jar --test-client" />
+    <option name="PROGRAM_PARAMETERS" value="download client --output client/build/gamepack-prev.jar --revision 218" />
     <shortenClasspath name="NONE" />
     <method v="2">
       <option name="Make" enabled="true" />
